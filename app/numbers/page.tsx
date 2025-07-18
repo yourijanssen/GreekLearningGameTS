@@ -192,7 +192,7 @@ export default function AlphabetGame() {
   // Game state
   const [items, setItems] = useState(() => shuffleArray(greekNumbers));
   const [input, setInput] = useState("");
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedback] = useState<string | null>(null);
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
