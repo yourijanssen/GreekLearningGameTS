@@ -33,3 +33,25 @@ export interface FeedbackLogProps {
 export interface GameOverProps {
   onMenu: () => void;
 }
+
+export interface ProgressData {
+  [key: string]: number;
+}
+
+export interface GameLinkProps {
+  href: string;
+  title: string;
+  progress: number;
+}
+
+export interface BadgeProps {
+  title: string;
+  unlocked: boolean;
+  emoji: string;
+}
+
+export interface HeaderProps {
+  level: number;
+  completedGames: number;
+  overallProgress: number;
+}

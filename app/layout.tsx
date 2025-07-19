@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Greek Learning Game",
-  description: "Learn Greek by playing typing games!",
+  title: 'Greek Language Learning App',
+  description: 'Learn Greek with interactive games and progress tracking',
 };
 
 export default function RootLayout({
