@@ -1,112 +1,66 @@
-// AlphabetGame.tsx
+// NumbersGame.tsx
 "use client";
-import React, { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { shuffleArray, stripGreekAccents } from "../utils/utilities";
-import { greekNumbers } from "../data/greekNumbers";
-import { GameProgressTracker } from "../UI/gameProgressTracker";
-import FeedbackLog from "../UI/FeedbackHistory";
-import { QuizQuestionView } from "../UI/quizQuestionView";
+import React, { useRef } from "react";
 import GameOver from "../UI/GameOver";
+import { QuizQuestionView } from "../UI/quizQuestionView";
+import FeedbackLog from "../UI/FeedbackHistory";
+import { GameProgressTracker } from "../UI/gameProgressTracker";
+import { greekNumbers } from "../data/greekNumbers";
+import { useGameTimer } from "../utils/hooks/useGameTimer";
+import { useAutoNavigation } from "../utils/hooks/useAutoNavigation";
+import { useFeedback } from "../utils/hooks/useFeedback";
+import { useGameProgress } from "../utils/hooks/useGameProgress";
+import { useSpeechSynthesis } from "../utils/hooks/useSpeechSynthesis";
 
 
 const NumbersGame: React.FC = () => {
-  // Game state
-  const [items, setItems] = useState(() => shuffleArray(greekNumbers));
-  const [input, setInput] = useState("");
-  const [feedback] = useState<string | null>(null);
-  const [streak, setStreak] = useState(0);
-  const [bestStreak, setBestStreak] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [startTime, setStartTime] = useState<number | null>(null);
-  const [finishTime, setFinishTime] = useState<number | null>(null);
-  const [log, setLog] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
 
-  // Timer start on mount
-  useEffect(() => {
-    setStartTime(Date.now());
-  }, []);
+  // Feedback management
+  const { feedback, feedbackColor, setFeedbackMessage } = useFeedback();
 
-  // Set finishTime when done
-  useEffect(() => {
-    if (items.length === 0 && finishTime == null) {
-      setFinishTime(Date.now());
+  // Game progress and state management
+  const {
+    items,
+    input,
+    streak,
+    bestStreak,
+    correctCount,
+    handleInput,
+    handleSubmit,
+  } = useGameProgress(
+    greekNumbers,
+    setFeedbackMessage,
+    (message: string) => setLog((prev) => [message, ...prev])
+  );
+
+    // Timer management
+  const { startTime, finishTime } = useGameTimer(items.length === 0);
+
+
+  // Log management (still in component as it's UI-specific for now)
+  const [log, setLog] = React.useState<string[]>([]);
+
+  // Speech synthesis
+  const { speak } = useSpeechSynthesis();
+  const handleListen = () => {
+    if (items.length > 0) {
+      speak(items[0][0]); // Speak the Greek number/word
     }
-  }, [items.length, finishTime]);
+  };
+
+  // Auto-navigation to menu
+  useAutoNavigation(items.length === 0, finishTime);
 
   // Auto-focus input when feedback is cleared
-  useEffect(() => {
+  React.useEffect(() => {
     if (!feedback) {
       inputRef.current?.focus();
     }
   }, [feedback]);
 
-  // Auto-return to main menu after finishing the game
-  useEffect(() => {
-    if (items.length === 0 && finishTime != null) {
-      const timeout = setTimeout(() => {
-        router.push("/");
-      }, 1600);
-      return () => clearTimeout(timeout);
-    }
-  }, [items.length, finishTime, router]);
-
-  // Unified feedback color
-  const feedbackColor =
-    feedback && feedback.startsWith("✅")
-      ? "#047c2a"
-      : feedback
-      ? "#c43219"
-      : "";
-
-  // Handlers
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
-
   const handleMenu = () => {
-    router.push("/");
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const [answer, question] = items[0];
-
-    if (stripGreekAccents(input) === stripGreekAccents(answer)) {
-      const perfect = input === answer;
-      setStreak((s) => s + 1);
-      setCorrectCount((n) => n + 1);
-      setBestStreak((now) => Math.max(now, streak + 1));
-      setItems((arr) => shuffleArray(arr.slice(1)));
-      setLog((prev) => [
-        perfect
-          ? `✅ Correct! Streak: ${streak + 1}`
-          : `✅ Correct! The proper way is: ${answer}`,
-        ...prev,
-      ]);
-      setInput("");
-    } else {
-      setLog((prev) => [
-        `❌ Incorrect! The correct was: ${answer} (${question}). Your streak was: ${streak}`,
-        ...prev,
-      ]);
-      setBestStreak((now) => Math.max(now, streak));
-      setStreak(0);
-      setItems((arr) => shuffleArray(arr));
-      setInput("");
-    }
-  };
-
-  const handleListen = () => {
-    const msg = items[0][0]; // The Greek letter/word itself
-    const utter = new window.SpeechSynthesisUtterance(msg);
-    const voices = window.speechSynthesis.getVoices();
-    const greekVoice = voices.find((v) => v.lang && v.lang.startsWith("el"));
-    if (greekVoice) utter.voice = greekVoice;
-    utter.rate = 0.9;
-    window.speechSynthesis.speak(utter);
+    window.location.href = "/"; // Direct navigation to menu
   };
 
   return (
@@ -114,20 +68,18 @@ const NumbersGame: React.FC = () => {
       {items.length === 0 ? (
         <GameOver onMenu={handleMenu} />
       ) : (
-        <>
-          <QuizQuestionView
-            question={items[0][1]}
-            input={input}
-            onInput={handleInput}
-            onSubmit={handleSubmit}
-            feedback={feedback}
-            feedbackColor={feedbackColor}
-            inputRef={inputRef}
-            disabled={!!feedback}
-            onMenu={handleMenu}
-            onListen={handleListen}
-          />
-        </>
+        <QuizQuestionView
+          question={items[0][1]}
+          input={input}
+          onInput={handleInput}
+          onSubmit={handleSubmit}
+          feedback={feedback}
+          feedbackColor={feedbackColor}
+          inputRef={inputRef}
+          disabled={!!feedback}
+          onMenu={handleMenu}
+          onListen={handleListen}
+        />
       )}
       <FeedbackLog log={log} />
       <GameProgressTracker
