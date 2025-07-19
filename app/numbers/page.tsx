@@ -1,190 +1,10 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
-/**
- * Removes diacritics (accents) from a Greek string, for accent-insensitive comparison.
- */
-function stripGreekAccents(text: string): string {
-  return text
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/ΐ|ΰ/g, (c) => (c === "ΐ" ? "ι" : "υ"));
-}
-
-// --- Data
-const greekNumbers: [string, string][] = [
-  ["1", "ένα"], ["ένα", "1"],
-  ["2", "δύο"], ["δύο", "2"],
-  ["3", "τρία"], ["τρία", "3"],
-  ["4", "τέσσερα"], ["τέσσερα", "4"],
-  ["5", "πέντε"], ["πέντε", "5"],
-  ["6", "έξι"], ["έξι", "6"],
-  ["7", "επτά"], ["επτά", "7"],
-  ["8", "οκτώ"], ["οκτώ", "8"],
-  ["9", "εννέα"], ["εννέα", "9"],
-  ["10", "δέκα"], ["δέκα", "10"],
-  ["11", "έντεκα"], ["έντεκα", "11"],
-  ["12", "δώδεκα"], ["δώδεκα", "12"],
-  ["13", "δεκατρία"], ["δεκατρία", "13"],
-  ["14", "δεκατέσσερα"], ["δεκατέσσερα", "14"],
-  ["15", "δεκαπέντε"], ["δεκαπέντε", "15"],
-  ["16", "δεκαέξι"], ["δεκαέξι", "16"],
-  ["17", "δεκαεπτά"], ["δεκαεπτά", "17"],
-  ["18", "δεκαοκτώ"], ["δεκαοκτώ", "18"],
-  ["19", "δεκαεννέα"], ["δεκαεννέα", "19"],
-  ["20", "είκοσι"], ["είκοσι", "20"],
-];
-
-// Shuffle Utility
-function shuffleArray<T>(array: T[]): T[] {
-  const arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-//---------------- Functional Components ------------------//
-
-/**
- * Reusable stats and timer display
- */
-function Stats({ streak, bestStreak, correctCount, total, startTime, finishTime }: {
-  streak: number,
-  bestStreak: number,
-  correctCount: number,
-  total: number,
-  startTime: number | null,
-  finishTime: number | null
-}) {
-  let display = "";
-  if (startTime) {
-    const end = finishTime || Date.now();
-    const elapsed = Math.floor((end - startTime) / 1000); // sec
-    const min = Math.floor(elapsed / 60);
-    const sec = elapsed % 60;
-    display = `${min > 0 ? min + "m " : ""}${sec < 10 ? "0" : ""}${sec}s`;
-  }
-  return (
-    <div style={{ marginTop: "2.3rem", fontWeight: 500, fontSize: "1.22rem" }}>
-      <div>
-        Streak: {streak} &nbsp;|&nbsp; Best: {bestStreak} &nbsp;|&nbsp;
-        Progress: {correctCount}/{total}
-      </div>
-      <div style={{ marginTop: "0.5rem", color: "#555" }}>
-        Time elapsed: {display}
-      </div>
-    </div>
-  );
-}
-
-/**
- * Main in-game view (question, input, buttons, feedback)
- */
-function QuizRound({ question, input, onInput, onSubmit, feedback, feedbackColor, inputRef, disabled, onMenu, onListen }: {
-  question: string,
-  input: string,
-  onInput: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  onSubmit: (e: React.FormEvent) => void,
-  feedback: string | null,
-  feedbackColor: string,
-  inputRef: React.RefObject<HTMLInputElement | null>,
-  disabled: boolean,
-  onMenu: () => void,
-  onListen: () => void,
-}) {
-  return (
-    <>
-      <h2>
-  {isNaN(Number(question))
-    ? <>Type the <b>number</b> for:</>
-    : <>Type the <b>Greek word</b> for:</>
-  }
-</h2>
-      <div
-        style={{
-          color: "#001e87",
-          fontSize: "2.4rem",
-          margin: "1.5rem 0",
-          fontFamily: "var(--font-geist-mono, monospace)",
-        }}
-      >
-        {question}
-      </div>
-      <form onSubmit={onSubmit}>
-        <input
-          ref={inputRef}
-          autoFocus
-          value={input}
-          onChange={onInput}
-          placeholder="..."
-          style={{
-            fontSize: "2rem",
-            padding: "0.5rem",
-            textAlign: "center",
-            width: "110px",
-            letterSpacing: "0.075em",
-          }}
-          disabled={disabled}
-        />
-        <button
-          type="submit"
-          style={{ marginLeft: 18, fontSize: "1.15rem", padding: "0.55rem 1.3rem" }}
-          disabled={disabled}
-        >
-          Check
-        </button>
-        <button
-          type="button"
-          onClick={onMenu}
-          style={{
-            marginLeft: 16,
-            fontSize: "1.08rem",
-            padding: "0.48rem 1.1rem",
-            background: "#ddd",
-            color: "#333",
-            border: "1px solid #aaa",
-          }}
-          disabled={disabled}
-          title="Return to menu"
-        >
-          Menu
-        </button>
-        <button
-  type="button"
-  onClick={onListen}
-  style={{
-    marginLeft: 16,
-    fontSize: "1.08rem",
-    padding: "0.48rem 1.1rem",
-    background: "#e8f4ff",
-    color: "#004d82",
-    border: "1px solid #62a0ff",
-  }}
-  disabled={disabled}
-  title="Hear the word in Greek"
->
-  Listen
-</button>
-      </form>
-      {feedback && (
-        <div
-          style={{
-            marginTop: "1.6rem",
-            color: feedbackColor,
-            fontWeight: 600,
-            fontSize: "1.15rem",
-            minHeight: "2.2em",
-          }}
-        >
-          {feedback}
-        </div>
-      )}
-    </>
-  );
-}
+import { greekNumbers } from "../data/greekNumbers";
+import { shuffleArray, stripGreekAccents } from "../utils/utilities";
+import { QuizQuestionView } from "../UI/quizQuestionView";
+import { GameProgressTracker } from "../UI/gameProgressTracker";
 
 //---------------- Parent Logic Orchestrator ---------------//
 
@@ -343,7 +163,7 @@ return (
       </div>
     ) : (
       <>
-        <QuizRound
+        <QuizQuestionView
           question={items[0][1]}
           input={input}
           onInput={handleInput}
@@ -358,7 +178,7 @@ return (
       </>
     )}
     <FeedbackLog log={log} />
-    <Stats
+    <GameProgressTracker
       streak={streak}
       bestStreak={bestStreak}
       correctCount={correctCount}
