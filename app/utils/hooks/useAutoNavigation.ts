@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 export function useAutoNavigation(
   isGameFinished: boolean,
   finishTime: number | null,
-  delay: number = 1600
+  delay: number = 100
 ): void {
   const router = useRouter();
 

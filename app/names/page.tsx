@@ -5,7 +5,7 @@ import GameOver from "../UI/GameOver";
 import { QuizQuestionView } from "../UI/quizQuestionView";
 import FeedbackLog from "../UI/FeedbackHistory";
 import { GameProgressTracker } from "../UI/gameProgressTracker";
-import greekNames from "../data/greekNames";
+import greekNames from "../data/dutch/greekNames";
 import { useGameTimer } from "../utils/hooks/useGameTimer";
 import { useAutoNavigation } from "../utils/hooks/useAutoNavigation";
 import { useFeedback } from "../utils/hooks/useFeedback";

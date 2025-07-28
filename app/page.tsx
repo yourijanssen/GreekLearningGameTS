@@ -2,8 +2,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ProgressData } from "./interfaces/types";
+import { LanguageOption, ProgressData } from "./interfaces/types";
 import { Achievements, Header, LearningPath, WelcomeSection } from "./UI/homePageUI";
+import { LanguageSelector } from "./utils/LanguageSelector";
 
 
 // Main Home Component (Orchestrator)
@@ -12,6 +13,8 @@ export default function Home() {
   const [progress, setProgress] = useState<ProgressData>({});
   const [level, setLevel] = useState(1);
   const [completedGames, setCompletedGames] = useState(0);
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageOption>('english');
+
 
   // Mock progress data (in a real app, fetch this from localStorage or a backend)
   useEffect(() => {
@@ -87,6 +90,10 @@ export default function Home() {
         completedGames={completedGames}
         overallProgress={overallProgress}
       />
+      <LanguageSelector 
+  selectedLanguage={selectedLanguage}
+  onLanguageChange={setSelectedLanguage}
+/>
       <WelcomeSection onStart={() => startGame("/alphabet")} />
       <section style={{ marginBottom: "2rem" }}>
         <h2

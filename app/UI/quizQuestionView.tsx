@@ -1,26 +1,31 @@
-/**
- * Renders the main view for a single quiz question, including input, submission, and feedback.
- */
-export function QuizQuestionView({ question, input, onInput, onSubmit, feedback, feedbackColor, inputRef, disabled, onMenu, onListen }: {
-  question: string,
-  input: string,
-  onInput: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  onSubmit: (e: React.FormEvent) => void,
-  feedback: string | null,
-  feedbackColor: string,
-  inputRef: React.RefObject<HTMLInputElement | null>,
-  disabled: boolean,
-  onMenu: () => void,
-  onListen: () => void,
+export function QuizQuestionView({
+  questionPrompt,
+  question,
+  input,
+  onInput,
+  onSubmit,
+  feedback,
+  feedbackColor,
+  inputRef,
+  disabled,
+  onMenu,
+  onListen,
+}: {
+  questionPrompt: string;
+  question: string;
+  input: string;
+  onInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (e: React.FormEvent) => void;
+  feedback: string | null;
+  feedbackColor: string;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+  disabled: boolean;
+  onMenu: () => void;
+  onListen: () => void;
 }) {
   return (
     <>
-      <h2>
-        {isNaN(Number(question))
-          ? <>Type the <b>number</b> for:</>
-          : <>Type the <b>Greek word</b> for:</>
-        }
-      </h2>
+      <h2>{questionPrompt}</h2>
       <div
         style={{
           color: "#001e87",

@@ -4,6 +4,13 @@ export interface QuizItem {
   answer: string;
 }
 
+export type LanguageOption = "english" | "dutch";
+
+export interface LanguageSettings {
+  selectedLanguage: LanguageOption;
+  setSelectedLanguage: (lang: LanguageOption) => void;
+}
+
 export interface GameStats {
   streak: number;
   bestStreak: number;
