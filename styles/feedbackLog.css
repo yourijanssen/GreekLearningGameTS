@@ -1,0 +1,27 @@
+
+.container {
+  margin: 1.7rem auto 0;
+  max-width: 420px;
+  min-height: 100px;
+  background: #fff8ef;
+  border: 1px solid #efb958;
+  border-radius: 7px;
+  padding: 1.1rem 1.4rem;
+  text-align: left;
+  font-size: 1.09rem;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.placeholder {
+  color: #969494;
+}
+
+.list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.listItem {
+  margin-bottom: 3px;
+}
