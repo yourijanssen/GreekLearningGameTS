@@ -1,5 +1,5 @@
+import { LanguageOption } from '@/types/auth';
 import React from 'react';
-import { LanguageOption } from '../interfaces/types';
 
 interface LanguageSelectorProps {
   selectedLanguage: LanguageOption;

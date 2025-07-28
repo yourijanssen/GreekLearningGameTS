@@ -1,6 +1,6 @@
 // components/GameOver.tsx
+import { GameOverProps } from "@/types/game";
 import React from "react";
-import { GameOverProps } from "../interfaces/types";
 
 const GameOver: React.FC<GameOverProps> = ({ onMenu }) => {
   return (

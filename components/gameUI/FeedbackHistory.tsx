@@ -1,6 +1,6 @@
 // FeedbackHistory.tsx
+import { FeedbackLogProps } from "@/types/game";
 import React from "react";
-import { FeedbackLogProps } from "../interfaces/types";
 
 /**
  * Component to display the history of feedback messages for user answers.
