@@ -1,0 +1,65 @@
+/* Fonts from next/font -- these are set as variables in your layout, so use var(--font-geist-sans) and var(--font-geist-mono) in your CSS where needed */
+
+:root {
+  --font-geist-sans: 'Geist', Arial, sans-serif;
+  --font-geist-mono: 'Geist Mono', monospace;
+}
+
+/* Main Background and Main Container */
+.greek-background {
+  background: var(--greek-light, #f5f9fb);
+  min-height: 100vh;
+}
+
+.greek-main-container {
+  margin: 0 auto;
+  max-width: 1100px;
+  padding: 2.5rem 1.25rem 2rem 1.25rem;
+  background: #fff;
+  box-shadow: 0 4px 24px 0 rgba(33,102,172,0.09);
+  border-radius: 16px;
+  border: 3.5px solid var(--greek-accent, #e3e6eb);
+  border-bottom: 8px solid var(--greek-blue, #2166ac);
+  position: relative;
+  margin-top: 3.5rem;
+  margin-bottom: 3.5rem;
+}
+
+/* Utility for top spacing with a fixed navbar (pt-16 in Tailwind = 64px) */
+.pt-16 {
+  padding-top: 4rem !important;
+}
+
+/* Footer */
+.layout-footer {
+  padding: 1rem 0;
+  text-align: center;
+  color: #68739d;
+  font-size: 0.97rem;
+  border-top: 1.5px solid var(--greek-accent, #e3e6eb);
+  font-family: var(--font-geist-mono), monospace;
+  margin-top: 2rem;
+  letter-spacing: 0.01em;
+  background: none;
+}
+
+/* Responsive tweaks */
+@media (max-width: 1100px) {
+  .greek-main-container {
+    max-width: 98vw;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+@media (max-width: 700px) {
+  .greek-main-container {
+    padding: 1.5rem 0.3rem 1rem 0.3rem;
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
+    border-width: 2.2px;
+    border-bottom-width: 6px;
+  }
+  .pt-16 {
+    padding-top: 3.2rem !important;
+  }
+}

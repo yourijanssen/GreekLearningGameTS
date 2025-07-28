@@ -2,9 +2,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LanguageOption, ProgressData } from "./interfaces/types";
-import { Achievements, Header, LearningPath, WelcomeSection } from "./UI/homePageUI";
-import { LanguageSelector } from "./utils/LanguageSelector";
+import { Header, WelcomeSection, LearningPath, Achievements } from "@/components/gameUI/homePageUI";
+import { LanguageSelector } from "@/lib/utils/LanguageSelector";
+import { LanguageOption } from "@/types/auth";
+import { ProgressData } from "@/types/game";
+import "@/styles/home.css"; // 
 
 
 // Main Home Component (Orchestrator)
@@ -51,11 +53,11 @@ export default function Home() {
 
   // Beginner Path Games
   const beginnerGames = [
-    { href: "/alphabet", title: "Alphabet Typing", progress: progress.alphabet || 0 },
-    { href: "/numbers", title: "Numbers Typing", progress: progress.numbers || 0 },
-    { href: "/weekdays", title: "Weekdays Typing", progress: progress.weekdays || 0 },
-    { href: "/vocabulary", title: "Basic Words Typing", progress: progress.vocabulary || 0 },
-    { href: "/names", title: "Greek Names Typing", progress: progress.names || 0 },
+    { href: "/games/alphabet", title: "Alphabet Typing", progress: progress.alphabet || 0 },
+    { href: "/games/numbers", title: "Numbers Typing", progress: progress.numbers || 0 },
+    { href: "/games/weekdays", title: "Weekdays Typing", progress: progress.weekdays || 0 },
+    { href: "/games/vocabulary", title: "Basic Words Typing", progress: progress.vocabulary || 0 },
+    { href: "/games/names", title: "Greek Names Typing", progress: progress.names || 0 },
   ];
 
   // Intermediate Path Games
@@ -75,77 +77,22 @@ export default function Home() {
   ];
 
   return (
-    <main
-      style={{
-        padding: "2rem",
-        maxWidth: 800,
-        margin: "auto",
-        background: "linear-gradient(to bottom, #f5f9ff, #e0eaff)",
-        minHeight: "100vh",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <Header
-        level={level}
-        completedGames={completedGames}
-        overallProgress={overallProgress}
-      />
-      <LanguageSelector 
-  selectedLanguage={selectedLanguage}
-  onLanguageChange={setSelectedLanguage}
-/>
+
+       <main className="home-main">
+      <Header level={level} completedGames={completedGames} overallProgress={overallProgress} />
+      <LanguageSelector selectedLanguage={selectedLanguage} onLanguageChange={setSelectedLanguage}/>
       <WelcomeSection onStart={() => startGame("/alphabet")} />
-      <section style={{ marginBottom: "2rem" }}>
-        <h2
-          style={{
-            fontSize: "1.8rem",
-            color: "#004d82",
-            textAlign: "center",
-            marginBottom: "1.5rem",
-          }}
-        >
-          Learning Paths
-        </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-            gap: "1.5rem",
-          }}
-        >
-          <LearningPath
-            title="Beginner Path"
-            emoji="🐣"
-            description="Build your foundation with the basics of Greek."
-            borderColor="#62a0ff"
-            games={beginnerGames}
-          />
-          <LearningPath
-            title="Intermediate Path"
-            emoji="🌿"
-            description="Expand your skills with grammar and phrases."
-            borderColor="#efb958"
-            games={intermediateGames}
-          />
-          <LearningPath
-            title="Advanced Path"
-            emoji="🦅"
-            description="Master Greek with complex structures."
-            borderColor="#c43219"
-            games={advancedGames}
-          />
+      
+      <section className="home-section">
+        <h2 className="home-section-title">Learning Paths</h2>
+        <div className="home-paths-grid">
+          <LearningPath title="Beginner Path" emoji="🐣" description="Build your foundation with the basics of Greek." borderColor="#62a0ff" games={beginnerGames}/>
+          <LearningPath title="Intermediate Path" emoji="🌿" description="Expand your skills with grammar and phrases." borderColor="#efb958" games={intermediateGames}/>
+          <LearningPath title="Advanced Path" emoji="🦅" description="Master Greek with complex structures." borderColor="#c43219" games={advancedGames}/>
         </div>
       </section>
       <Achievements progress={progress} level={level} />
-      <footer
-        style={{
-          marginTop: "3rem",
-          textAlign: "center",
-          color: "#888",
-          padding: "1rem",
-          borderTop: "1px solid #ccc",
-        }}
-      >
+      <footer className="home-footer">
         <small>Learn Greek by Playing Typing Games!</small>
         <br />
         <small>Made with ❤️ by <i>Youri Janssen</i></small>

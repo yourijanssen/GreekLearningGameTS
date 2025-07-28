@@ -1,16 +1,17 @@
 // AlphabetGame.tsx
 "use client";
+import FeedbackLog from "@/components/gameUI/FeedbackHistory";
+import GameOver from "@/components/gameUI/GameOver";
+import GameProgressTracker from "@/components/gameUI/gameProgressTracker";
+import { QuizQuestionView } from "@/components/gameUI/quizQuestionView";
+import { greekLetters } from "@/data/english1/greekLetters";
+import { useAutoNavigation } from "@/hooks/useAutoNavigation";
+import { useFeedback } from "@/hooks/useFeedback";
+import { useGameProgress } from "@/hooks/useGameProgress";
+import { useGameTimer } from "@/hooks/useGameTimer";
+import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 import React, { useRef } from "react";
-import GameOver from "../UI/GameOver";
-import { QuizQuestionView } from "../UI/quizQuestionView";
-import FeedbackLog from "../UI/FeedbackHistory";
-import { GameProgressTracker } from "../UI/gameProgressTracker";
-import { greekLetters } from "../data/dutch/greekLetters";
-import { useGameTimer } from "../utils/hooks/useGameTimer";
-import { useSpeechSynthesis } from "../utils/hooks/useSpeechSynthesis";
-import { useAutoNavigation } from "../utils/hooks/useAutoNavigation";
-import { useGameProgress } from "../utils/hooks/useGameProgress";
-import { useFeedback } from "../utils/hooks/useFeedback";
+
 
 
 const AlphabetGame: React.FC = () => {
@@ -28,11 +29,12 @@ const AlphabetGame: React.FC = () => {
     correctCount,
     handleInput,
     handleSubmit,
-  } = useGameProgress(
-    greekLetters,
-    setFeedbackMessage,
-    (message: string) => setLog((prev) => [message, ...prev])
-  );
+} = useGameProgress(
+  greekLetters, // First argument: greekLetters (data source)
+  setFeedbackMessage, // Second argument: feedback setter
+  (message: string) => setLog((prev) => [message, ...prev]), // Third argument: log updater
+  greekLetters // Fourth argument: initialItems (assuming it's the same as greekLetters)
+);
 
     // Timer management
   const { startTime, finishTime } = useGameTimer(items.length === 0);
@@ -69,17 +71,16 @@ const AlphabetGame: React.FC = () => {
         <GameOver onMenu={handleMenu} />
       ) : (
         <QuizQuestionView
-          question={items[0][1]}
-          input={input}
-          onInput={handleInput}
-          onSubmit={handleSubmit}
-          feedback={feedback}
-          feedbackColor={feedbackColor}
-          inputRef={inputRef}
-          disabled={!!feedback}
-          onMenu={handleMenu}
-          onListen={handleListen}
-        />
+            question={items[0][1]}
+            input={input}
+            onInput={handleInput}
+            onSubmit={handleSubmit}
+            feedback={feedback}
+            feedbackColor={feedbackColor}
+            inputRef={inputRef}
+            disabled={!!feedback}
+            onMenu={handleMenu}
+            onListen={handleListen} questionPrompt={""}        />
       )}
       <FeedbackLog log={log} />
       <GameProgressTracker

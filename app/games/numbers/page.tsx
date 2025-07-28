@@ -1,17 +1,15 @@
-// NumbersGame.tsx
 "use client";
+import FeedbackLog from "@/components/gameUI/FeedbackHistory";
+import GameOver from "@/components/gameUI/GameOver";
+import GameProgressTracker from "@/components/gameUI/gameProgressTracker";
+import { QuizQuestionView } from "@/components/gameUI/quizQuestionView";
+import { greekNumbers } from "@/data/english1/greekNumbers";
+import { useAutoNavigation } from "@/hooks/useAutoNavigation";
+import { useFeedback } from "@/hooks/useFeedback";
+import { useGameProgress } from "@/hooks/useGameProgress";
+import { useGameTimer } from "@/hooks/useGameTimer";
+import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 import React, { useRef } from "react";
-import GameOver from "../UI/GameOver";
-import { QuizQuestionView } from "../UI/quizQuestionView";
-import FeedbackLog from "../UI/FeedbackHistory";
-import { GameProgressTracker } from "../UI/gameProgressTracker";
-import { greekNumbers } from "../data/dutch/greekNumbers";
-import { useGameTimer } from "../utils/hooks/useGameTimer";
-import { useAutoNavigation } from "../utils/hooks/useAutoNavigation";
-import { useFeedback } from "../utils/hooks/useFeedback";
-import { useGameProgress } from "../utils/hooks/useGameProgress";
-import { useSpeechSynthesis } from "../utils/hooks/useSpeechSynthesis";
-
 
 const NumbersGame: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -29,14 +27,14 @@ const NumbersGame: React.FC = () => {
     handleInput,
     handleSubmit,
   } = useGameProgress(
-    greekNumbers,
-    setFeedbackMessage,
-    (message: string) => setLog((prev) => [message, ...prev])
+    greekNumbers, // Data source
+    setFeedbackMessage, // Feedback setter
+    (message: string) => setLog((prev) => [message, ...prev]), // Log updater
+    greekNumbers // Initial items set to greekNumbers for consistency on first render
   );
 
-    // Timer management
+  // Timer management
   const { startTime, finishTime } = useGameTimer(items.length === 0);
-
 
   // Log management (still in component as it's UI-specific for now)
   const [log, setLog] = React.useState<string[]>([]);
@@ -79,6 +77,7 @@ const NumbersGame: React.FC = () => {
           disabled={!!feedback}
           onMenu={handleMenu}
           onListen={handleListen}
+          questionPrompt="Type the Greek word for:"
         />
       )}
       <FeedbackLog log={log} />
@@ -89,6 +88,11 @@ const NumbersGame: React.FC = () => {
         total={greekNumbers.length}
         startTime={startTime}
         finishTime={finishTime}
+        // Custom labels for context-specific text
+        streakLabel="Current Streak"
+        bestStreakLabel="Top Streak"
+        progressLabel="Completed"
+        timeLabel="Time Taken"
       />
     </main>
   );

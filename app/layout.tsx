@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Providers from "./providers"; // <--- import the wrapper
+import '../styles/globals.css';
+import Providers from "./providers";
+import Navbar from "@/components/gameUI/Navbar";
+import '@/styles/layout.css';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,10 +28,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} greek-background antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} greek-background antialiased`} // Greek font is used in CSS now
       >
-        <Providers> {/* <-- wrap your app with Providers */}
-          <div className="greek-main-container">{children}</div>
+        <Providers>
+          <Navbar />
+          <main className="pt-16 min-h-screen"> {/* pt-16 now handled by our .pt-16 utility */}
+            <div className="greek-main-container">
+              {children}
+            </div>
+          </main>
+          <footer className="layout-footer">
+            <p>Made with ❤️ by Youri Janssen</p>
+          </footer>
         </Providers>
       </body>
     </html>

@@ -1,0 +1,197 @@
+Header
+.hpui-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #004d82;
+  padding-bottom: 1rem;
+}
+
+.hpui-header-title {
+  font-size: 2.5rem;
+  color: #004d82;
+  margin: 0;
+}
+
+.hpui-header-desc {
+  font-size: 1.2rem;
+  color: #555;
+  margin: 0.5rem 0;
+}
+
+.hpui-progress-bar-bg {
+  width: 80%;
+  height: 20px;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 1rem auto;
+  border: 1px solid #bbb;
+}
+.hpui-progress-bar {
+  height: 100%;
+  background: #047c2a;
+  transition: width 0.5s ease;
+}
+.hpui-progress-bar-label {
+  color: #777;
+}
+
+/* Welcome Section */
+.hpui-welcome-section {
+  text-align: center;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+.hpui-welcome-title {
+  font-size: 1.8rem;
+  color: #004d82;
+  margin-top: 0;
+}
+.hpui-welcome-desc {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+.hpui-welcome-btn {
+  padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
+  background: #047c2a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.hpui-welcome-btn:hover,
+.hpui-welcome-btn:focus {
+  background: #035f20;
+}
+
+/* Learning Path */
+.hpui-path {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-left: 5px solid var(--hpui-border, #62a0ff);
+}
+.hpui-path-title {
+  font-size: 1.5rem;
+  color: #004d82;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+.hpui-path-desc {
+  color: #555;
+  margin-bottom: 1rem;
+}
+.hpui-path-games {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+/* Game Link */
+.hpui-gamelink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.hpui-gamelink-link {
+  color: #004d82;
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.3s ease;
+}
+.hpui-gamelink-link.progress {
+  font-weight: 600;
+}
+.hpui-gamelink-link.completed {
+  color: #047c2a;
+}
+.hpui-gamelink-link:hover,
+.hpui-gamelink-link:focus {
+  color: #002a5c; /* for incomplete */
+}
+.hpui-gamelink-link.completed:hover,
+.hpui-gamelink-link.completed:focus {
+  color: #035f20;
+}
+.hpui-gamelink-progress {
+  color: #efb958;
+  font-size: 0.8rem;
+}
+.hpui-gamelink-completed {
+  color: #047c2a;
+  font-size: 0.8rem;
+}
+
+/* Achievements Section */
+.hpui-achievements-section {
+  margin-bottom: 2rem;
+}
+.hpui-achievements-title {
+  font-size: 1.8rem;
+  color: #004d82;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.hpui-achievements-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Badge */
+.hpui-badge {
+  text-align: center;
+  width: 120px;
+  padding: 1rem 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+.hpui-badge.unlocked {
+  background: #e8f4ff;
+  border: 2px solid #62a0ff;
+}
+.hpui-badge.locked {
+  background: #f0f0f0;
+  border: 2px solid #ccc;
+}
+.hpui-badge-emoji {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+.hpui-badge-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+.hpui-badge-status {
+  font-size: 0.7rem;
+  margin-top: 0.3rem;
+}
+.hpui-badge-status.unlocked {
+  color: #047c2a;
+}
+.hpui-badge-status.locked {
+  color: #888;
+}
+
+.hpui-path, .hpui-welcome-section, .hpui-achievements-list {
+  box-shadow: 0 2px 16px rgba(32,40,80,0.07);
+  border-radius: 13px;
+  transition: box-shadow 0.19s cubic-bezier(.23,1,.32,1), transform 0.16s;
+}
+.hpui-path:hover, .hpui-welcome-section:hover, .hpui-achievements-list:hover {
+  box-shadow: 0 4px 32px rgba(32,40,80,0.13);
+  transform: translateY(-2px) scale(1.01);
+}

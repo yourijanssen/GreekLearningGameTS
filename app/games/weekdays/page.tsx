@@ -1,14 +1,14 @@
 "use client";
+import FeedbackLog from "@/components/gameUI/FeedbackHistory";
+import GameOver from "@/components/gameUI/GameOver";
+import GameProgressTracker from "@/components/gameUI/gameProgressTracker";
+import { QuizQuestionView } from "@/components/gameUI/quizQuestionView";
+import { greekWeekdays } from "@/data/english1/greekWeekdays";
+import { useAutoNavigation } from "@/hooks/useAutoNavigation";
+import { useGameTimer } from "@/hooks/useGameTimer";
+import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
+import { shuffleArray, stripGreekAccents } from "@/lib/utils/utilities";
 import React, { useRef, useState } from "react";
-import GameOver from "../UI/GameOver";
-import { QuizQuestionView } from "../UI/quizQuestionView";
-import FeedbackLog from "../UI/FeedbackHistory";
-import { GameProgressTracker } from "../UI/gameProgressTracker";
-import { greekWeekdays } from "../data/dutch/greekWeekdays";
-import { useAutoNavigation } from "../utils/hooks/useAutoNavigation";
-import { useGameTimer } from "../utils/hooks/useGameTimer";
-import { useSpeechSynthesis } from "../utils/hooks/useSpeechSynthesis";
-import { shuffleArray, stripGreekAccents } from "../utils/utilities";
 
 const WeekdaysGame: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);

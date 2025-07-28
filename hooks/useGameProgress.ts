@@ -1,5 +1,5 @@
+import { shuffleArray, stripGreekAccents } from "@/lib/utils/utilities";
 import { useState } from "react";
-import { shuffleArray, stripGreekAccents } from "../utilities";
 
 export function useGameProgress<T extends [string, string]>(
   greekWeekdays: [string, string][],

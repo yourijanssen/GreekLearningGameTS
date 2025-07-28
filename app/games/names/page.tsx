@@ -1,16 +1,17 @@
 // NameGame.tsx
 "use client";
+import FeedbackLog from "@/components/gameUI/FeedbackHistory";
+import GameOver from "@/components/gameUI/GameOver";
+import GameProgressTracker from "@/components/gameUI/gameProgressTracker";
+import { QuizQuestionView } from "@/components/gameUI/quizQuestionView";
+import greekNames from "@/data/english1/greekNames";
+import { useAutoNavigation } from "@/hooks/useAutoNavigation";
+import { useFeedback } from "@/hooks/useFeedback";
+import { useGameProgress } from "@/hooks/useGameProgress";
+import { useGameTimer } from "@/hooks/useGameTimer";
+import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 import React, { useRef } from "react";
-import GameOver from "../UI/GameOver";
-import { QuizQuestionView } from "../UI/quizQuestionView";
-import FeedbackLog from "../UI/FeedbackHistory";
-import { GameProgressTracker } from "../UI/gameProgressTracker";
-import greekNames from "../data/dutch/greekNames";
-import { useGameTimer } from "../utils/hooks/useGameTimer";
-import { useAutoNavigation } from "../utils/hooks/useAutoNavigation";
-import { useFeedback } from "../utils/hooks/useFeedback";
-import { useGameProgress } from "../utils/hooks/useGameProgress";
-import { useSpeechSynthesis } from "../utils/hooks/useSpeechSynthesis";
+
 
 const NameGame: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -28,9 +29,10 @@ const NameGame: React.FC = () => {
     handleInput,
     handleSubmit,
   } = useGameProgress(
-    greekNames,
-    setFeedbackMessage,
-    (message: string) => setLog((prev) => [message, ...prev])
+    greekNames, // Data source
+    setFeedbackMessage, // Feedback setter
+    (message: string) => setLog((prev) => [message, ...prev]), // Log updater
+    greekNames // Initial items set to greekNames for consistency on first render
   );
 
     // Timer management
@@ -70,17 +72,16 @@ const NameGame: React.FC = () => {
         <GameOver onMenu={handleMenu} />
       ) : (
         <QuizQuestionView
-          question={items[0][1]}
-          input={input}
-          onInput={handleInput}
-          onSubmit={handleSubmit}
-          feedback={feedback}
-          feedbackColor={feedbackColor}
-          inputRef={inputRef}
-          disabled={!!feedback}
-          onMenu={handleMenu}
-          onListen={handleListen}
-        />
+            question={items[0][1]}
+            input={input}
+            onInput={handleInput}
+            onSubmit={handleSubmit}
+            feedback={feedback}
+            feedbackColor={feedbackColor}
+            inputRef={inputRef}
+            disabled={!!feedback}
+            onMenu={handleMenu}
+            onListen={handleListen} questionPrompt={""}        />
       )}
       <FeedbackLog log={log} />
       <GameProgressTracker

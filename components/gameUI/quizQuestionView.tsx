@@ -1,3 +1,6 @@
+import React from "react";
+import "@/styles/quizQuestionView.css"; // Adjust path as needed
+
 export function QuizQuestionView({
   questionPrompt,
   question,
@@ -25,51 +28,29 @@ export function QuizQuestionView({
 }) {
   return (
     <>
-      <h2>{questionPrompt}</h2>
-      <div
-        style={{
-          color: "#001e87",
-          fontSize: "2.4rem",
-          margin: "1.5rem 0",
-          fontFamily: "var(--font-geist-mono, monospace)",
-        }}
-      >
-        {question}
-      </div>
-      <form onSubmit={onSubmit}>
+      <h2 className="qqv-title">{questionPrompt}</h2>
+      <div className="qqv-question">{question}</div>
+      <form className="qqv-form" onSubmit={onSubmit}>
         <input
           ref={inputRef}
           autoFocus
           value={input}
           onChange={onInput}
           placeholder="..."
-          style={{
-            fontSize: "2rem",
-            padding: "0.5rem",
-            textAlign: "center",
-            width: "200px",
-            letterSpacing: "0.075em",
-          }}
+          className="qqv-input"
           disabled={disabled}
         />
         <button
           type="submit"
-          style={{ marginLeft: 18, fontSize: "1.15rem", padding: "0.55rem 1.3rem" }}
+          className="qqv-btn"
           disabled={disabled}
         >
           Check
         </button>
         <button
           type="button"
+          className="qqv-btn-menu"
           onClick={onMenu}
-          style={{
-            marginLeft: 16,
-            fontSize: "1.08rem",
-            padding: "0.48rem 1.1rem",
-            background: "#ddd",
-            color: "#333",
-            border: "1px solid #aaa",
-          }}
           disabled={disabled}
           title="Return to menu"
         >
@@ -77,15 +58,8 @@ export function QuizQuestionView({
         </button>
         <button
           type="button"
+          className="qqv-btn-listen"
           onClick={onListen}
-          style={{
-            marginLeft: 16,
-            fontSize: "1.08rem",
-            padding: "0.48rem 1.1rem",
-            background: "#e8f4ff",
-            color: "#004d82",
-            border: "1px solid #62a0ff",
-          }}
           disabled={disabled}
           title="Hear the word in Greek"
         >
@@ -94,13 +68,8 @@ export function QuizQuestionView({
       </form>
       {feedback && (
         <div
-          style={{
-            marginTop: "1.6rem",
-            color: feedbackColor,
-            fontWeight: 600,
-            fontSize: "1.15rem",
-            minHeight: "2.2em",
-          }}
+          className="qqv-feedback"
+          style={{ color: feedbackColor }}
         >
           {feedback}
         </div>

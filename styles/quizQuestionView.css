@@ -1,0 +1,94 @@
+.qqv-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: #f0f4f8;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.qqv-title {
+  margin-bottom: 1rem;
+  color: var(--greek-blue, #2166ac);
+  font-size: 1.28rem;
+  font-weight: 700;
+  letter-spacing: 0.018em;
+}
+
+.qqv-question {
+  color: #001e87;
+  font-size: 2.4rem;
+  margin: 1.5rem 0;
+  font-family: var(--font-geist-mono, monospace);
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.qqv-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.qqv-input {
+  font-size: 2rem;
+  padding: 0.5rem;
+  text-align: center;
+  width: 200px;
+  letter-spacing: 0.075em;
+  border-radius: 8px;
+  border: 1.75px solid var(--greek-border, #396096);
+  outline: none;
+}
+
+.qqv-btn {
+  margin-left: 0.7rem;
+  font-size: 1.15rem;
+  padding: 0.55rem 1.3rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--greek-border, #396096);
+  background: var(--greek-blue, #2166ac);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.13s;
+}
+
+.qqv-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.qqv-btn-menu {
+  margin-left: 1rem;
+  font-size: 1.08rem;
+  padding: 0.48rem 1.1rem;
+  background: #ddd;
+  color: #333;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.qqv-btn-listen {
+  margin-left: 1rem;
+  font-size: 1.08rem;
+  padding: 0.48rem 1.1rem;
+  background: #e8f4ff;
+  color: #004d82;
+  border: 1px solid #62a0ff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.qqv-feedback {
+  margin-top: 1.6rem;
+  font-weight: 600;
+  font-size: 1.15rem;
+  min-height: 2.2em;
+  text-align: center;
+}
