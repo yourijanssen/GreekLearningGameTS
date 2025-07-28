@@ -1,4 +1,3 @@
-// AlphabetGame.tsx
 "use client";
 import FeedbackLog from "@/components/gameUI/FeedbackHistory";
 import GameOver from "@/components/gameUI/GameOver";
@@ -6,63 +5,89 @@ import GameProgressTracker from "@/components/gameUI/gameProgressTracker";
 import { QuizQuestionView } from "@/components/gameUI/quizQuestionView";
 import { greekLetters } from "@/data/english1/greekLetters";
 import { useAutoNavigation } from "@/hooks/useAutoNavigation";
-import { useFeedback } from "@/hooks/useFeedback";
-import { useGameProgress } from "@/hooks/useGameProgress";
 import { useGameTimer } from "@/hooks/useGameTimer";
 import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
-import React, { useRef } from "react";
-
-
+import { shuffleArray, stripGreekAccents } from "@/lib/utils/utilities";
+import React, { useRef, useState } from "react";
 
 const AlphabetGame: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-    // Feedback management
-  const { feedback, feedbackColor, setFeedbackMessage } = useFeedback();
+  // Game state
+  const [items, setItems] = useState(() => shuffleArray(greekLetters));
+  const [input, setInput] = useState("");
+  const [streak, setStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [log, setLog] = useState<string[]>([]);
 
-  // Game progress and state management
-  const {
-    items,
-    input,
-    streak,
-    bestStreak,
-    correctCount,
-    handleInput,
-    handleSubmit,
-} = useGameProgress(
-  greekLetters, // First argument: greekLetters (data source)
-  setFeedbackMessage, // Second argument: feedback setter
-  (message: string) => setLog((prev) => [message, ...prev]), // Third argument: log updater
-  greekLetters // Fourth argument: initialItems (assuming it's the same as greekLetters)
-);
-
-    // Timer management
+  // Timer
   const { startTime, finishTime } = useGameTimer(items.length === 0);
 
-
-  // Log management (still in component as it's UI-specific for now)
-  const [log, setLog] = React.useState<string[]>([]);
-
-  // Speech synthesis
+  // Speech
   const { speak } = useSpeechSynthesis();
   const handleListen = () => {
     if (items.length > 0) {
-      speak(items[0][0]); // Speak the Greek letter
+      const msg = /[a-zA-Z]/.test(items[0][1]) ? items[0][0] : items[0][1];
+      speak(msg);
     }
   };
 
-  // Auto-navigation to menu
+  // Focus management
+  React.useEffect(() => {
+    setTimeout(() => {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }, 0);
+  }, [items.length]);
+
+  // Input handler
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  // Submit handler and log update
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (items.length === 0) return;
+    const [answer, question] = items[0];
+
+    if (
+      stripGreekAccents(input).toLowerCase() ===
+      stripGreekAccents(answer).toLowerCase()
+    ) {
+      const perfect = input === answer;
+      const newStreak = streak + 1;
+      setStreak(newStreak);
+      setCorrectCount((n) => n + 1);
+      setBestStreak((now) => Math.max(now, newStreak));
+      setItems((arr) => arr.slice(1));
+      const feedbackMsg = perfect
+        ? `✅ Correct! Streak: ${newStreak}`
+        : `✅ Correct! The proper way is: ${answer}`;
+      setLog((prev) => [feedbackMsg, ...prev]);
+      setInput("");
+    } else {
+      setBestStreak((now) => Math.max(now, streak));
+      setStreak(0);
+      const wrongItem = items[0];
+      setItems((arr) => [...arr.slice(1), wrongItem]);
+      const feedbackMsg = `❌ Incorrect! The correct answer was: ${answer} (${question}). Your streak was: ${streak}`;
+      setLog((prev) => [feedbackMsg, ...prev]);
+      setInput("");
+    }
+  };
+
+  // Auto-navigation (if you use it)
   useAutoNavigation(items.length === 0, finishTime);
 
-  // Auto-focus input when feedback is cleared
+  // Focus on next question (after every input change)
   React.useEffect(() => {
-    if (!feedback) {
-      inputRef.current?.focus();
-    }
-  }, [feedback]);
+    inputRef.current?.focus();
+  }, [items.length]);
 
   const handleMenu = () => {
-    window.location.href = "/"; // Direct navigation to menu
+    window.location.href = "/";
   };
 
   return (
@@ -71,16 +96,18 @@ const AlphabetGame: React.FC = () => {
         <GameOver onMenu={handleMenu} />
       ) : (
         <QuizQuestionView
-            question={items[0][1]}
-            input={input}
-            onInput={handleInput}
-            onSubmit={handleSubmit}
-            feedback={feedback}
-            feedbackColor={feedbackColor}
-            inputRef={inputRef}
-            disabled={!!feedback}
-            onMenu={handleMenu}
-            onListen={handleListen} questionPrompt={""}        />
+          questionPrompt="Type the Greek letter for:"
+          question={items[0][1]}
+          input={input}
+          onInput={handleInput}
+          onSubmit={handleSubmit}
+          inputRef={inputRef}
+          disabled={false}
+          onMenu={handleMenu}
+          onListen={handleListen}
+          feedback={null}
+          feedbackColor={""}
+        />
       )}
       <FeedbackLog log={log} />
       <GameProgressTracker
