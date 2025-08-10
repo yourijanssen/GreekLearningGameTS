@@ -56,6 +56,7 @@ const KeyboardLanguageStatus: React.FC<KeyboardLanguageStatusProps> = ({
   /**
    * Handles keyboard input to detect active layout
    */
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleKeyPress = (event: KeyboardEvent) => {
     const char = event.key;
     
@@ -88,7 +89,7 @@ const KeyboardLanguageStatus: React.FC<KeyboardLanguageStatusProps> = ({
   useEffect(() => {
     document.addEventListener("keypress", handleKeyPress);
     return () => document.removeEventListener("keypress", handleKeyPress);
-  }, []);
+  }, [handleKeyPress]);
 
   if (!show) return null;
 

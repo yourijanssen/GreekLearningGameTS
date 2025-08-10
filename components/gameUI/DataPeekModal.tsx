@@ -49,7 +49,7 @@ const DataPeekModal: React.FC<DataPeekModalProps> = ({
    * Filters and sorts the data based on search query and sort preference
    */
   const filteredAndSortedData = useMemo(() => {
-    let filtered = data.filter(([greek, english]) =>
+    const filtered = data.filter(([greek, english]) =>
       greek.toLowerCase().includes(searchQuery.toLowerCase()) ||
       english.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -75,6 +75,7 @@ const DataPeekModal: React.FC<DataPeekModalProps> = ({
       await navigator.clipboard.writeText(dataText);
       setCopyFeedback("✅ Copied to clipboard!");
       setTimeout(() => setCopyFeedback(""), 2000);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setCopyFeedback("❌ Copy failed");
       setTimeout(() => setCopyFeedback(""), 2000);
