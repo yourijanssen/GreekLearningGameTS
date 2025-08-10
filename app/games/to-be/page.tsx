@@ -2,15 +2,15 @@
 import React from "react";
 import { BaseQuizGame } from "@/components/gameUI/BaseQuizGame";
 import { useGenericQuizGame } from "@/hooks/useGenericQuizGame";
-import { greekNumbers } from "@/data/english1/greekNumbers";
 import { shuffleArray } from "@/lib/utils/utilities";
+import { greekToBe } from "@/data/english1/greekToBe";
 
 /** Storage key for persisting "to be" verb game state in localStorage */
 const STORAGE_KEY = "toBeGameState";
 
 const ToBeGame: React.FC = () => {
   const gameState = useGenericQuizGame({
-    data: shuffleArray(greekNumbers),
+    data: shuffleArray(greekToBe),
     storageKey: STORAGE_KEY,
     speechType: "number",
   });
@@ -18,11 +18,11 @@ const ToBeGame: React.FC = () => {
     return (
       <BaseQuizGame
         {...gameState}
-        data={greekNumbers}
-        questionPrompt="Type the Greek number for:"
-        datasetTitle="Greek Numbers Dataset"
-        firstColumnLabel="Greek Number"
-        secondColumnLabel="English Number"
+        data={greekToBe}
+        questionPrompt="Type the Greek weekday for:"
+        datasetTitle="Greek Quiz Dataset"
+        firstColumnLabel="Greek Weekday"
+        secondColumnLabel="English Weekday"
         buttonText="📊 View Quiz Data"
       />
     );
