@@ -1,13 +1,16 @@
-// pages/index.tsx or Home.tsx
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Header, WelcomeSection, LearningPath, Achievements } from "@/components/gameUI/homePageUI";
+import {
+  Header,
+  WelcomeSection,
+  LearningPath,
+  Achievements,
+} from "@/components/gameUI/homePageUI";
 import { LanguageSelector } from "@/lib/utils/LanguageSelector";
 import { LanguageOption } from "@/types/auth";
 import { ProgressData } from "@/types/game";
-import "@/styles/home.css"; // 
-
+import "@/styles/home.css";
 
 // Main Home Component (Orchestrator)
 export default function Home() {
@@ -16,7 +19,7 @@ export default function Home() {
   const [level, setLevel] = useState(1);
   const [completedGames, setCompletedGames] = useState(0);
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageOption>('english');
-
+  const [hasResumeNumbersGame, setHasResumeNumbersGame] = useState(false);
 
   // Mock progress data (in a real app, fetch this from localStorage or a backend)
   useEffect(() => {
@@ -37,6 +40,21 @@ export default function Home() {
     const completed = Object.values(mockProgress).filter((p) => p === 100).length;
     setCompletedGames(completed);
     setLevel(Math.floor(completed / 3) + 1); // Level up every 3 completed games
+  }, []);
+
+  // Check if a saved game exists in localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("numbersGameState");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.remainingItems?.length > 0) {
+          setHasResumeNumbersGame(true);
+        }
+      } catch {
+        // Ignore malformed data
+      }
+    }
   }, []);
 
   // Calculate overall progress percentage
@@ -77,26 +95,61 @@ export default function Home() {
   ];
 
   return (
-
-       <main className="home-main">
+    <main className="home-main">
       <Header level={level} completedGames={completedGames} overallProgress={overallProgress} />
-      <LanguageSelector selectedLanguage={selectedLanguage} onLanguageChange={setSelectedLanguage}/>
+      <LanguageSelector selectedLanguage={selectedLanguage} onLanguageChange={setSelectedLanguage} />
       <WelcomeSection onStart={() => startGame("/alphabet")} />
-      
+
+      {hasResumeNumbersGame && (
+        <section className="resume-section">
+          <h3>Resume your last game</h3>
+          <button
+            className="resume-button"
+            onClick={() => startGame("/games/numbers")}
+            style={{
+              backgroundColor: "#efb958",
+              color: "#000",
+              border: "none",
+              borderRadius: "5px",
+              padding: "0.7rem 1.2rem",
+              fontSize: "1rem",
+              cursor: "pointer",
+              marginBottom: "1rem"
+            }}
+          >
+            ▶ Resume Numbers Typing
+          </button>
+        </section>
+      )}
+
       <section className="home-section">
         <h2 className="home-section-title">Learning Paths</h2>
         <div className="home-paths-grid">
-          <LearningPath title="Beginner Path" emoji="🐣" description="Build your foundation with the basics of Greek." borderColor="#62a0ff" games={beginnerGames}/>
-          <LearningPath title="Intermediate Path" emoji="🌿" description="Expand your skills with grammar and phrases." borderColor="#efb958" games={intermediateGames}/>
-          <LearningPath title="Advanced Path" emoji="🦅" description="Master Greek with complex structures." borderColor="#c43219" games={advancedGames}/>
+          <LearningPath
+            title="Beginner Path"
+            emoji="🐣"
+            description="Build your foundation with the basics of Greek."
+            borderColor="#62a0ff"
+            games={beginnerGames}
+          />
+          <LearningPath
+            title="Intermediate Path"
+            emoji="🌿"
+            description="Expand your skills with grammar and phrases."
+            borderColor="#efb958"
+            games={intermediateGames}
+          />
+          <LearningPath
+            title="Advanced Path"
+            emoji="🦅"
+            description="Master Greek with complex structures."
+            borderColor="#c43219"
+            games={advancedGames}
+          />
         </div>
       </section>
+
       <Achievements progress={progress} level={level} />
-      <footer className="home-footer">
-        <small>Learn Greek by Playing Typing Games!</small>
-        <br />
-        <small>Made with ❤️ by <i>Youri Janssen</i></small>
-      </footer>
     </main>
   );
 }

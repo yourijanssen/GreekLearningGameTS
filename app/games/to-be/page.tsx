@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import FeedbackLog from "@/components/gameUI/FeedbackHistory";
 import GameOver from "@/components/gameUI/GameOver";
 import GameProgressTracker from "@/components/gameUI/gameProgressTracker";
@@ -8,82 +8,74 @@ import { greekToBe } from "@/data/english1/greekToBe";
 import { useAutoNavigation } from "@/hooks/useAutoNavigation";
 import { useGameTimer } from "@/hooks/useGameTimer";
 import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
-import { shuffleArray, stripGreekAccents } from "@/lib/utils/utilities";
+import { useQuizGame } from "@/hooks/useQuizGame";
+import { shuffleArray } from "@/lib/utils/utilities";
+import { DOMUtils } from "@/lib/utils/gameUtilities/domUtils";
+import { SpeechUtils } from "@/lib/utils/gameUtilities/speechUtlis";
 
+/** Storage key for persisting "to be" verb game state in localStorage */
+const STORAGE_KEY = "toBeGameState";
+
+/**
+ * ToBeGame Component
+ * 
+ * A quiz game where users learn Greek "to be" verb conjugations by typing the Greek form
+ * for the displayed English conjugation (I am, you are, he/she/it is, etc.). Features include:
+ * - Speech synthesis for pronunciation help with Greek verb forms
+ * - Streak tracking with detailed feedback showing both user input and correct answers
+ * - Game state persistence across sessions for uninterrupted learning
+ * - Progress tracking with comprehensive statistics
+ * - Auto-navigation when complete
+ * - Enhanced logging system with search functionality
+ * - Intelligent feedback for perfect vs imperfect matches
+ * 
+ * @returns {React.FC} The ToBeGame component
+ */
 const ToBeGame: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Game state
-  const [items, setItems] = useState(() => shuffleArray(greekToBe));
-  const [input, setInput] = useState("");
-  const [streak, setStreak] = useState(0);
-  const [bestStreak, setBestStreak] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [log, setLog] = useState<string[]>([]);
+  // Use custom hook for game logic
+  const {
+    items,
+    input,
+    streak,
+    bestStreak,
+    correctCount,
+    log,
+    handleSubmit,
+    handleInput,
+  } = useQuizGame(shuffleArray(greekToBe), STORAGE_KEY);
 
-  // Timer
+  // Custom hooks
   const { startTime, finishTime } = useGameTimer(items.length === 0);
-
-  // Speech synthesis
   const { speak } = useSpeechSynthesis();
-  const handleListen = () => {
+
+  /**
+   * Handles text-to-speech for the current question
+   * Speaks the Greek verb form for pronunciation help
+   * This helps users learn the correct pronunciation of Greek verb conjugations
+   */
+  const handleListen = (): void => {
     if (items.length > 0) {
-      speak(items[0][0]);
+      const speechText = SpeechUtils.getNumberSpeechText(items[0][0]);
+      speak(speechText);
     }
   };
 
-  // Focus management on question change
+  /**
+   * Handles navigation back to main menu
+   */
+  const handleMenu = (): void => {
+    DOMUtils.navigateTo("/");
+  };
+
+  // Focus input when questions change
   useEffect(() => {
-    setTimeout(() => {
-      inputRef.current?.focus();
-      inputRef.current?.select();
-    }, 0);
+    DOMUtils.focusAndSelectInput(inputRef);
   }, [items.length]);
 
-  // Input handler
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
-
-  // Submit/check/advance logic
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (items.length === 0) return;
-    const [answer, question] = items[0];
-
-    if (
-      stripGreekAccents(input).toLowerCase() ===
-      stripGreekAccents(answer).toLowerCase()
-    ) {
-      const perfect = input === answer;
-      const newStreak = streak + 1;
-      setStreak(newStreak);
-      setCorrectCount((n) => n + 1);
-      setBestStreak((now) => Math.max(now, newStreak));
-      setItems((arr) => arr.slice(1));
-      const feedbackMsg = perfect
-        ? `✅ Correct! Streak: ${newStreak}`
-        : `✅ Correct! The proper way is: ${answer}`;
-      setLog((prev) => [feedbackMsg, ...prev]);
-      setInput("");
-    } else {
-      setBestStreak((now) => Math.max(now, streak));
-      setStreak(0);
-      const wrongItem = items[0];
-      setItems((arr) => [...arr.slice(1), wrongItem]);
-      const feedbackMsg = `❌ Incorrect! The correct answer was: ${answer} (${question}). Your streak was: ${streak}`;
-      setLog((prev) => [feedbackMsg, ...prev]);
-      setInput("");
-    }
-  };
-
-  // Auto-navigation
+  // Auto-navigation when game is complete
   useAutoNavigation(items.length === 0, finishTime);
-
-  // Go to menu
-  const handleMenu = () => {
-    window.location.href = "/";
-  };
 
   return (
     <main style={{ maxWidth: 500, margin: "2rem auto", textAlign: "center" }}>
@@ -101,10 +93,12 @@ const ToBeGame: React.FC = () => {
           onMenu={handleMenu}
           onListen={handleListen}
           feedback={null}
-          feedbackColor={""}
+          feedbackColor=""
         />
       )}
+      
       <FeedbackLog log={log} />
+      
       <GameProgressTracker
         streak={streak}
         bestStreak={bestStreak}

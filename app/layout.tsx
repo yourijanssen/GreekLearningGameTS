@@ -37,9 +37,11 @@ export default function RootLayout({
               {children}
             </div>
           </main>
-          <footer className="layout-footer">
-            <p>Made with ❤️ by Youri Janssen</p>
-          </footer>
+     <footer className="layout-footer">
+        <small>Learn Greek by Playing Typing Games!</small>
+        <br />
+        <small>Made with ❤️ by <i>Youri Janssen</i></small>
+      </footer>
         </Providers>
       </body>
     </html>
