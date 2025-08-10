@@ -13,6 +13,7 @@ import "@/styles/home.css";
 import { useHomeData } from "@/hooks/useHomeData";
 import { LearningPathsSection } from "@/components/gameUI/home/LearningPathsSection";
 import { ResumeGameSection } from "@/components/gameUI/home/ResumeGameSection";
+import { ResetGamesButton } from "@/components/gameUI/home/ResetGamesButtonProps";
 
 export default function Home() {
   const router = useRouter();
@@ -39,6 +40,11 @@ export default function Home() {
     navigationService.navigateToNumbers();
   };
 
+    const handleGameReset = () => {
+    console.log("All games have been reset");
+    // Optional: Update any state that needs refreshing
+  };
+
   return (
     <main className="home-main">
       <Header 
@@ -62,6 +68,8 @@ export default function Home() {
       <LearningPathsSection progress={progress} />
 
       <Achievements progress={progress} level={level} />
+
+      <ResetGamesButton onReset={handleGameReset} />
     </main>
   );
 }

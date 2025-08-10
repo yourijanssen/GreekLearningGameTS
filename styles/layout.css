@@ -63,3 +63,119 @@
     padding-top: 3.2rem !important;
   }
 }
+
+/* Reset Games Button Styles */
+.reset-games-section {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.reset-games-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reset-games-button:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.reset-games-button:active {
+  transform: translateY(0);
+}
+
+/* Confirmation Dialog Styles */
+.confirmation-dialog {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  text-align: center;
+  border: 2px solid #dc3545;
+}
+
+.confirmation-dialog h4 {
+  margin: 0 0 1rem 0;
+  color: #dc3545;
+  font-size: 1.1rem;
+}
+
+.confirmation-dialog p {
+  margin: 0 0 1.5rem 0;
+  color: #666;
+  line-height: 1.4;
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.confirm-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.confirm-button:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.confirm-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .confirmation-dialog {
+    margin: 0 1rem;
+    padding: 1rem;
+  }
+  
+  .confirmation-buttons {
+    flex-direction: column;
+  }
+  
+  .confirm-button,
+  .cancel-button {
+    width: 100%;
+  }
+}

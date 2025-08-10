@@ -7,7 +7,7 @@ import { shuffleArray } from "@/lib/utils/utilities";
 import greekNames from "@/data/english1/greekNames";
 
 /** Storage key for persisting game state in localStorage */
-const STORAGE_KEY = "numbersGameState";
+const STORAGE_KEY = "namesGameState";
 
 const NamesGame: React.FC = () => {
   const gameState = useGenericQuizGame({
