@@ -24,7 +24,7 @@ const NamesGame: React.FC = () => {
       datasetTitle="Greek Names Dataset"
       firstColumnLabel="Greek Name"
       secondColumnLabel="English Name"
-      buttonText="📊 View Names"
+      buttonText="📊 View Quiz Data"
     />
   );
 };

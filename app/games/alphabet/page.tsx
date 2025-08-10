@@ -26,7 +26,7 @@ const AlphabetGame: React.FC = () => {
       datasetTitle="Greek Letters Dataset"
       firstColumnLabel="Greek Letter"
       secondColumnLabel="English Letter"
-      buttonText="📊 View Letters"
+      buttonText="📊 View Quiz Data"
     />
   );
 };

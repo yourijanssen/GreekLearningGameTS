@@ -21,9 +21,12 @@ export default function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageOption>('english');
   const [hasResumeNumbersGame, setHasResumeNumbersGame] = useState(false);
 
-  // Mock progress data (in a real app, fetch this from localStorage or a backend)
-  useEffect(() => {
-    const mockProgress = {
+  // =============================================
+  // DATA INITIALIZATION METHODS
+  // =============================================
+  
+  const initializeMockProgress = () => {
+    return {
       alphabet: 50, // Percentage complete
       numbers: 20,
       weekdays: 0,
@@ -35,93 +38,142 @@ export default function Home() {
       adjectives: 0,
       sentences: 0,
     };
+  };
+
+  const calculateCompletedGames = (progressData: ProgressData) => {
+    return Object.values(progressData).filter((p) => p === 100).length;
+  };
+
+  const calculateLevel = (completedCount: number) => {
+    return Math.floor(completedCount / 3) + 1; // Level up every 3 completed games
+  };
+
+  const loadProgressData = () => {
+    const mockProgress = initializeMockProgress();
     setProgress(mockProgress);
 
-    const completed = Object.values(mockProgress).filter((p) => p === 100).length;
+    const completed = calculateCompletedGames(mockProgress);
     setCompletedGames(completed);
-    setLevel(Math.floor(completed / 3) + 1); // Level up every 3 completed games
-  }, []);
+    setLevel(calculateLevel(completed));
+  };
 
-  // Check if a saved game exists in localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem("numbersGameState");
-    if (saved) {
-      try {
+  // =============================================
+  // LOCAL STORAGE METHODS
+  // =============================================
+  
+  const checkForSavedGame = () => {
+    try {
+      const saved = localStorage.getItem("numbersGameState");
+      if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.remainingItems?.length > 0) {
           setHasResumeNumbersGame(true);
         }
-      } catch {
-        // Ignore malformed data
       }
+    } catch (error) {
+      console.warn("Failed to parse saved game state:", error);
+      // Ignore malformed data
     }
-  }, []);
+  };
 
-  // Calculate overall progress percentage
-  const overallProgress = Math.round(
-    Object.values(progress).reduce((sum, val) => sum + val, 0) /
-      (Object.keys(progress).length * 100) *
-      100
-  );
+  // =============================================
+  // PROGRESS CALCULATION METHODS
+  // =============================================
+  
+  const calculateOverallProgress = (progressData: ProgressData) => {
+    const totalProgress = Object.values(progressData).reduce((sum, val) => sum + val, 0);
+    const totalGames = Object.keys(progressData).length;
+    return Math.round((totalProgress / (totalGames * 100)) * 100);
+  };
 
-  // Function to handle starting a game
-  const startGame = (gamePath: string) => {
+  // =============================================
+  // NAVIGATION METHODS
+  // =============================================
+  
+  const handleStartGame = (gamePath: string) => {
     router.push(gamePath);
   };
 
-  // Beginner Path Games
-  const beginnerGames = [
-    { href: "/games/alphabet", title: "Alphabet Typing", progress: progress.alphabet || 0 },
-    { href: "/games/numbers", title: "Numbers Typing", progress: progress.numbers || 0 },
-    { href: "/games/weekdays", title: "Weekdays Typing", progress: progress.weekdays || 0 },
-    { href: "/games/vocabulary", title: "Basic Words Typing", progress: progress.vocabulary || 0 },
-    { href: "/games/names", title: "Greek Names Typing", progress: progress.names || 0 },
+  const handleResumeNumbers = () => {
+    handleStartGame("/games/numbers");
+  };
+
+  const handleWelcomeStart = () => {
+    handleStartGame("/alphabet");
+  };
+
+  // =============================================
+  // GAME DATA CONFIGURATION METHODS
+  // =============================================
+  
+  const getBeginnerGames = (progressData: ProgressData) => [
+    { href: "/games/alphabet", title: "Alphabet Typing", progress: progressData.alphabet || 0 },
+    { href: "/games/numbers", title: "Numbers Typing", progress: progressData.numbers || 0 },
+    { href: "/games/weekdays", title: "Weekdays Typing", progress: progressData.weekdays || 0 },
+    { href: "/games/vocabulary", title: "Basic Words Typing", progress: progressData.vocabulary || 0 },
+    { href: "/games/names", title: "Greek Names Typing", progress: progressData.names || 0 },
   ];
 
-  // Intermediate Path Games
-  const intermediateGames = [
-    { href: "/to-be", title: "To Be Grammar Typing", progress: progress["to-be"] || 0 },
-    { href: "/phrases", title: "Phrases Typing", progress: progress.phrases || 0 },
-    { href: "/verbs", title: "Verbs Typing", progress: progress.verbs || 0 },
-    { href: "/adjectives", title: "Adjectives Typing", progress: progress.adjectives || 0 },
+  const getIntermediateGames = (progressData: ProgressData) => [
+    { href: "/to-be", title: "To Be Grammar Typing", progress: progressData["to-be"] || 0 },
+    { href: "/phrases", title: "Phrases Typing", progress: progressData.phrases || 0 },
+    { href: "/verbs", title: "Verbs Typing", progress: progressData.verbs || 0 },
+    { href: "/adjectives", title: "Adjectives Typing", progress: progressData.adjectives || 0 },
   ];
 
-  // Advanced Path Games
-  const advancedGames = [
-    { href: "/sentences", title: "Sentences Typing", progress: progress.sentences || 0 },
+  const getAdvancedGames = () => [
+    { href: "/sentences", title: "Sentences Typing", progress: 0 },
     { href: "/advanced-phrases", title: "Advanced Phrases Typing", progress: 0 },
     { href: "/advanced-verbs", title: "Advanced Verbs Typing", progress: 0 },
     { href: "/advanced-adjectives", title: "Advanced Adjectives Typing", progress: 0 },
   ];
 
-  return (
-    <main className="home-main">
-      <Header level={level} completedGames={completedGames} overallProgress={overallProgress} />
-      <LanguageSelector selectedLanguage={selectedLanguage} onLanguageChange={setSelectedLanguage} />
-      <WelcomeSection onStart={() => startGame("/alphabet")} />
+  // =============================================
+  // LANGUAGE HANDLING METHODS
+  // =============================================
+  
+  const handleLanguageChange = (language: LanguageOption) => {
+    setSelectedLanguage(language);
+    // You might want to save this to localStorage or context
+    // localStorage.setItem('selectedLanguage', language);
+  };
 
-      {hasResumeNumbersGame && (
-        <section className="resume-section">
-          <h3>Resume your last game</h3>
-          <button
-            className="resume-button"
-            onClick={() => startGame("/games/numbers")}
-            style={{
-              backgroundColor: "#efb958",
-              color: "#000",
-              border: "none",
-              borderRadius: "5px",
-              padding: "0.7rem 1.2rem",
-              fontSize: "1rem",
-              cursor: "pointer",
-              marginBottom: "1rem"
-            }}
-          >
-            ▶ Resume Numbers Typing
-          </button>
-        </section>
-      )}
+  // =============================================
+  // COMPONENT RENDERING METHODS
+  // =============================================
+  
+  const renderResumeSection = () => {
+    if (!hasResumeNumbersGame) return null;
 
+    return (
+      <section className="resume-section">
+        <h3>Resume your last game</h3>
+        <button
+          className="resume-button"
+          onClick={handleResumeNumbers}
+          style={{
+            backgroundColor: "#efb958",
+            color: "#000",
+            border: "none",
+            borderRadius: "5px",
+            padding: "0.7rem 1.2rem",
+            fontSize: "1rem",
+            cursor: "pointer",
+            marginBottom: "1rem"
+          }}
+        >
+          ▶ Resume Numbers Typing
+        </button>
+      </section>
+    );
+  };
+
+  const renderLearningPaths = () => {
+    const beginnerGames = getBeginnerGames(progress);
+    const intermediateGames = getIntermediateGames(progress);
+    const advancedGames = getAdvancedGames();
+
+    return (
       <section className="home-section">
         <h2 className="home-section-title">Learning Paths</h2>
         <div className="home-paths-grid">
@@ -148,6 +200,49 @@ export default function Home() {
           />
         </div>
       </section>
+    );
+  };
+
+  // =============================================
+  // EFFECTS
+  // =============================================
+  
+  useEffect(() => {
+    loadProgressData();
+  }, []);
+
+  useEffect(() => {
+    checkForSavedGame();
+  }, []);
+
+  // =============================================
+  // COMPUTED VALUES
+  // =============================================
+  
+  const overallProgress = calculateOverallProgress(progress);
+
+  // =============================================
+  // MAIN RENDER
+  // =============================================
+  
+  return (
+    <main className="home-main">
+      <Header 
+        level={level} 
+        completedGames={completedGames} 
+        overallProgress={overallProgress} 
+      />
+      
+      <LanguageSelector 
+        selectedLanguage={selectedLanguage} 
+        onLanguageChange={handleLanguageChange} 
+      />
+      
+      <WelcomeSection onStart={handleWelcomeStart} />
+
+      {renderResumeSection()}
+
+      {renderLearningPaths()}
 
       <Achievements progress={progress} level={level} />
     </main>

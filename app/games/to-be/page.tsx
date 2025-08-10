@@ -23,7 +23,7 @@ const ToBeGame: React.FC = () => {
         datasetTitle="Greek Numbers Dataset"
         firstColumnLabel="Greek Number"
         secondColumnLabel="English Number"
-        buttonText="📊 View Numbers"
+        buttonText="📊 View Quiz Data"
       />
     );
   };

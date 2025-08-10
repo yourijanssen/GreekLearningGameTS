@@ -2,15 +2,15 @@
 import React from "react";
 import { BaseQuizGame } from "@/components/gameUI/BaseQuizGame";
 import { useGenericQuizGame } from "@/hooks/useGenericQuizGame";
-import { greekNumbers } from "@/data/english1/greekNumbers";
 import { shuffleArray } from "@/lib/utils/utilities";
+import { greekWeekdays } from "@/data/english1/greekWeekdays";
 
 /** Storage key for persisting weekdays game state in localStorage */
 const STORAGE_KEY = "weekdaysGameState";
 
 const WeekdaysGame: React.FC = () => {
   const gameState = useGenericQuizGame({
-    data: shuffleArray(greekNumbers),
+    data: shuffleArray(greekWeekdays),
     storageKey: STORAGE_KEY,
     speechType: "number",
   });
@@ -18,12 +18,12 @@ const WeekdaysGame: React.FC = () => {
   return (
     <BaseQuizGame
       {...gameState}
-      data={greekNumbers}
-      questionPrompt="Type the Greek number for:"
-      datasetTitle="Greek Numbers Dataset"
-      firstColumnLabel="Greek Number"
-      secondColumnLabel="English Number"
-      buttonText="📊 View Numbers"
+      data={greekWeekdays}
+      questionPrompt="Type the Greek weekday for:"
+      datasetTitle="Greek Weekdays Dataset"
+      firstColumnLabel="Greek Weekday"
+      secondColumnLabel="English Weekday"
+      buttonText="📊 View Quiz Data"
     />
   );
 };
