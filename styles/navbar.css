@@ -154,3 +154,108 @@
     min-width: 170px;
   }
 }
+
+/* Auth buttons and user display */
+.navbar-user {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 1rem;
+  margin-right: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.navbar-auth-btn {
+  background: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0.5rem 1rem;
+  margin-left: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.login-btn {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.login-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.logout-btn {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.logout-btn:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Focus states for accessibility */
+.navbar-auth-btn:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Active/pressed state */
+.navbar-auth-btn:active {
+  transform: scale(0.98);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar-user {
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+  }
+  
+  .navbar-auth-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    margin-left: 0.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-user {
+    display: none; /* Hide username on very small screens */
+  }
+  
+  .navbar-auth-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  .navbar-user {
+    color: #ccc;
+  }
+  
+  .login-btn {
+    color: #4da3ff;
+    border-color: #4da3ff;
+  }
+  
+  .login-btn:hover {
+    background-color: #4da3ff;
+    color: white;
+  }
+  
+  .logout-btn {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+  }
+  
+  .logout-btn:hover {
+    background-color: #ff6b6b;
+    color: white;
+  }
+}

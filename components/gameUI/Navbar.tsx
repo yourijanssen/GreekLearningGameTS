@@ -37,6 +37,9 @@ const Navbar: React.FC = () => {
             <Link href="/games" className={isActive('/games')}>
               All Games
             </Link>
+              <Link href="/login" className={isActive('/login')}>
+              Login
+            </Link>
           </div>
         </div>
       </div>
