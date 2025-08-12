@@ -6,13 +6,15 @@ import { useGenericQuizGame } from "@/hooks/useGenericQuizGame";
 import { shuffleArray } from "@/lib/utils/utilities";
 import greekNames from "@/data/english1/greekNames";
 
-/** Storage key for persisting game state in localStorage */
-const STORAGE_KEY = "namesGameState";
+// Example: In real app, get from auth/session/context!
+const userId = "1"; // Replace with actual logged-in user's ID
+const gameType = "greek-letters-alphabet";
 
 const NamesGame: React.FC = () => {
   const gameState = useGenericQuizGame({
     data: shuffleArray(greekNames),
-    storageKey: STORAGE_KEY,
+     userId,
+    gameType,
     speechType: "number",
   });
 

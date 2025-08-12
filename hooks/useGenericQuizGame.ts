@@ -11,16 +11,17 @@ import { SpeechUtils } from "@/lib/utils/gameUtilities/speechUtlis";
  */
 export interface QuizGameConfig {
   data: [string, string][];
-  storageKey: string;
+  userId: string; // NEW: User identifier for backend storage
+  gameType: string; // NEW: Game type identifier for backend storage
   speechType: "number" | "alphabet";
 }
-// hooks/useGenericQuizGame.ts
+
 export const useGenericQuizGame = (config: QuizGameConfig) => {
-  const { data, storageKey, speechType } = config;
+  const { data, userId, gameType, speechType } = config;
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Use custom hook for game logic
-  const gameState = useQuizGame(data, storageKey);
+  // Use custom hook for game logic (uses backend persistence)
+  const gameState = useQuizGame(data, userId, gameType);
 
   // Custom hooks
   const { startTime, finishTime } = useGameTimer(gameState.items.length === 0);
@@ -47,13 +48,12 @@ export const useGenericQuizGame = (config: QuizGameConfig) => {
     DOMUtils.navigateTo("/");
   };
 
-  // FIXED: Update handleSubmit to use generic Element type
+  // Submit wrapper (for generic Element type compatibility)
   const handleSubmit = (e: React.FormEvent<Element>): void => {
-    // Cast to more specific type if needed for the actual implementation
     gameState.handleSubmit(e as React.FormEvent<HTMLFormElement>);
   };
 
-  // Focus input on question change
+  // Focus input on each new question
   useEffect(() => {
     DOMUtils.focusAndSelectInput(inputRef);
   }, [gameState.items.length]);
@@ -68,6 +68,6 @@ export const useGenericQuizGame = (config: QuizGameConfig) => {
     finishTime,
     handleListen,
     handleMenu,
-    handleSubmit, // Use the wrapper function with correct type
+    handleSubmit,
   };
 };

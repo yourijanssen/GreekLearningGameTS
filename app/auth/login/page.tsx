@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/app/api/login";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -9,6 +10,7 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { login } = useAuth(); // Get the login function from context
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,8 +24,10 @@ export default function Login() {
     if (!result.success) {
       setError(result.error || "Invalid email or password");
     } else {
-      // Optionally store user data in a global state management solution
-      // or context if needed
+      // Store user data in context
+      if (result.user && result.token) {
+        login(result.user, result.token);
+      }
       router.push("/"); // Redirect to homepage after login
     }
   };

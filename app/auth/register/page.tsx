@@ -25,7 +25,7 @@ export default function Register() {
       setError(result.error || "Registration failed");
     } else {
       // Redirect to login after successful registration
-      router.push("/login");
+      router.push("/auth/login");
     }
   };
 

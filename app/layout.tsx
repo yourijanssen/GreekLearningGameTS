@@ -4,6 +4,7 @@ import '../styles/globals.css';
 import Providers from "./providers";
 import Navbar from "@/components/gameUI/Navbar";
 import '@/styles/layout.css';
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} greek-background antialiased`} // Greek font is used in CSS now
       >
         <Providers>
+              <AuthProvider>
           <Navbar />
           <main className="pt-16 min-h-screen"> {/* pt-16 now handled by our .pt-16 utility */}
             <div className="greek-main-container">
@@ -42,6 +44,7 @@ export default function RootLayout({
         <br />
         <small>Made with ❤️ by <i>Youri Janssen</i></small>
       </footer>
+      </AuthProvider>
         </Providers>
       </body>
     </html>
