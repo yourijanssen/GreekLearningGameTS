@@ -2,20 +2,18 @@
 "use client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:8080/" || "https://express-vercel-deployment-ashen.vercel.app/";
+const API_URL = process.env.API_URL || "https://express-vercel-deployment-ashen.vercel.app" || "http://localhost:8080";
 
 // FIXED: Use the /comments endpoint, not /users
 async function fetchComments() {
-  const res = await fetch(`${API_URL}comments`);
+  const res = await fetch(`${API_URL}/comments`);
   const data = await res.json();
   // Defensive: provide [] as fallback if comments is not present
   return data.comments || [];
 }
 
 async function postComment(comment: string) {
-  const res = await fetch(`${API_URL}comments`, {
+  const res = await fetch(`${API_URL}/comments`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ comment }),
