@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:8080/" || "https://express-vercel-deployment-hbyrk1dv3-yourijanssens-projects.vercel.app";
+  "http://localhost:8080/" || "https://express-vercel-deployment-ashen.vercel.app/";
 
 // FIXED: Use the /comments endpoint, not /users
 async function fetchComments() {
