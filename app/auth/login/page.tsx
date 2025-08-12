@@ -1,28 +1,29 @@
-// app/login/page.tsx
 "use client";
 import React, { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { loginUser } from "@/app/api/login";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
 
-    const result = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
+    const result = await loginUser({ email, password });
 
-    if (result?.error) {
-      setError("Invalid email or password");
+    setIsLoading(false);
+
+    if (!result.success) {
+      setError(result.error || "Invalid email or password");
     } else {
+      // Optionally store user data in a global state management solution
+      // or context if needed
       router.push("/"); // Redirect to homepage after login
     }
   };
@@ -38,6 +39,7 @@ export default function Login() {
           placeholder="Email"
           required
           style={{ padding: "0.5rem", fontSize: "1rem" }}
+          disabled={isLoading}
         />
         <input
           type="password"
@@ -46,17 +48,26 @@ export default function Login() {
           placeholder="Password"
           required
           style={{ padding: "0.5rem", fontSize: "1rem" }}
+          disabled={isLoading}
         />
         <button
           type="submit"
-          style={{ padding: "0.5rem", fontSize: "1rem", background: "#047c2a", color: "#fff", border: "none" }}
+          style={{ 
+            padding: "0.5rem", 
+            fontSize: "1rem", 
+            background: isLoading ? "#ccc" : "#047c2a", 
+            color: "#fff", 
+            border: "none",
+            cursor: isLoading ? "not-allowed" : "pointer"
+          }}
+          disabled={isLoading}
         >
-          Sign In
+          {isLoading ? "Signing In..." : "Sign In"}
         </button>
         {error && <p style={{ color: "#c43219" }}>{error}</p>}
       </form>
       <p style={{ marginTop: "1rem" }}>
-        Don&apos;t have an account? <a href="/register">Register</a>
+        Don&apos;t have an account? <a href="/auth/register">Register</a>
       </p>
     </main>
   );

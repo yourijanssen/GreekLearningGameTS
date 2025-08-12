@@ -1,36 +1,31 @@
-// app/register/page.tsx
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { registerUser } from "@/app/api/register";
+
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
 
-    try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, password }),
-      });
+    const result = await registerUser({ email, name, password });
 
-      if (!response.ok) {
-        const data = await response.json();
-        setError(data.error || "Registration failed");
-      } else {
-        // Redirect to login after successful registration
-        router.push("/login");
-      }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      setError("An error occurred. Please try again.");
+    setIsLoading(false);
+
+    if (!result.success) {
+      setError(result.error || "Registration failed");
+    } else {
+      // Redirect to login after successful registration
+      router.push("/login");
     }
   };
 
@@ -45,6 +40,7 @@ export default function Register() {
           placeholder="Email"
           required
           style={{ padding: "0.5rem", fontSize: "1rem" }}
+          disabled={isLoading}
         />
         <input
           type="text"
@@ -52,6 +48,7 @@ export default function Register() {
           onChange={(e) => setName(e.target.value)}
           placeholder="Name"
           style={{ padding: "0.5rem", fontSize: "1rem" }}
+          disabled={isLoading}
         />
         <input
           type="password"
@@ -60,12 +57,21 @@ export default function Register() {
           placeholder="Password"
           required
           style={{ padding: "0.5rem", fontSize: "1rem" }}
+          disabled={isLoading}
         />
         <button
           type="submit"
-          style={{ padding: "0.5rem", fontSize: "1rem", background: "#047c2a", color: "#fff", border: "none" }}
+          style={{ 
+            padding: "0.5rem", 
+            fontSize: "1rem", 
+            background: isLoading ? "#ccc" : "#047c2a", 
+            color: "#fff", 
+            border: "none",
+            cursor: isLoading ? "not-allowed" : "pointer"
+          }}
+          disabled={isLoading}
         >
-          Register
+          {isLoading ? "Registering..." : "Register"}
         </button>
         {error && <p style={{ color: "#c43219" }}>{error}</p>}
       </form>
